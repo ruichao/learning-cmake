@@ -11,10 +11,17 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   SET(warnings "/W4 /WX /EHsc")
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
+if (NOT CONFIGURED_ONCE)
+  set(CMAKE_CXX_FLAGS "${warnings}"
+    CACHE STRING "Flags used by the compiler during all build types." FORCE)
+  set(CMAKE_C_FLAGS "${warnings}"
+    CACHE STRING "Flags used by the compiler during all build types." FORCE)
+endif()
 
 add_executable(todoList main.cc Todo.cc)
 
 add_test(todoTest todoList)
+
+set(CONFIGURED_ONCE TRUE CACHE INTERNAL "${warnings}"
+  "A flag showing that CMake has configured at least once.")
 
